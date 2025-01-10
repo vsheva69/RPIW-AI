@@ -182,7 +182,7 @@ def main():
 
     # Chat input
     # Placeholder for chat messages
-    with st.expander('Disclaimer'):
+    with st.expander('Disclaimer',icon="🚨"):
         st.write('''
             Informasi yang disajikan dalam chat ini merupakan hasil analisis AI berdasarkan dokumen asli. Meskipun AI berusaha memberikan informasi yang akurat, kemungkinan masih terdapat ketidaktepatan. Oleh karena itu, hasil analisis ini tidak dapat dijadikan acuan yang sepenuhnya dapat dipertanggungjawabkan kebenarannya.
         ''')
@@ -219,52 +219,52 @@ def main():
     # Display chat messages and bot response
     if st.session_state.messages[-1]["role"] != "assistant":
         with st.chat_message("assistant"):
-            with st.spinner("Sedang berpikir...."):
-                time.sleep(5)
-                placeholder = st.empty()
+
 	        	# Muat potongan teks (chunk) dari file
                 #text_chunks = np.load(text_chunks_path, allow_pickle=True).tolist()
                 #distances, indices = search_faiss_index(prompt, index_dir, model="text-embedding-ada-002")
           		# Ambil teks asli yang relevan
-                relevant_texts = search_multiple_indices(prompt, index_dir)
+            relevant_texts = search_multiple_indices(prompt, index_dir)
                 #relevant_texts = retrieve_text_from_indices(indices, text_chunks)
            	 	# Gabungkan hasil teks relevan untuk diberi ke GPT-4
-                context = "\n".join(relevant_texts)
+            context = "\n".join(relevant_texts)
             #query grafik
-            if "bar chart" in prompt or "line chart" in prompt or "peta" in prompt:
-                try:
-                    st.header("*****Visualisasi :*****")
-                    prompt_grafik = (
-                        """
-                            If the query requires creating a bar chart, reply as follows:
-                            {"bar": {"columns": ["A", "B", "C", ...], "data": [2501, 2489, 10, ...]}}
-                            If the query requires creating a line chart, reply as follows:
-                            {"line": {"columns": ["A", "B", "C", ...], "data": [25, 24, 10, ...]}}
-                            If the query requires creating a map, reply as follows:
-                            {"map": {"Lat": [ .......... ], "Long": [..........], "data": [.............],"kab":[.........]}}         
-                            All strings in "columns" list and data list, should be in double quotes,
-                            "Lat" and "Long" columns are latitude and longitude data should following the reference Table 21.1: Koordinat Kabupaten dan Kota,
-                            "Lat" and "Long" list should be in float,
-                            data list should be in integer or float,
-                            underscore symbol must remove from data list,
-                            Lets think step by step
-                            Below is the query.
-                            Query:
-                            """
-                    + prompt
-                    ) 
-                    response = ask_gpt4(prompt_grafik, context, model="gpt-4o-mini")
-                    decoded_response = decode_response(response)
-                    write_response(decoded_response)
-                except Exception as e:
-                    st.error(f"Gagal memuat visualisasi. Coba Lagi!")
-            else:
-                response = ask_gpt4(prompt, context, model="gpt-4o-mini")
-                def stream_data():
-                    for word in response.split(" "):
-                        yield word + " "
-                        time.sleep(0.06)
-                st.write_stream(stream_data)
+            with st.spinner("Sedang berpikir...."):
+                if "bar chart" in prompt or "line chart" in prompt or "peta" in prompt:
+                        try:
+                            st.header("*****Visualisasi :*****")
+                            prompt_grafik = (
+                                """
+                                    If the query requires creating a bar chart, reply as follows:
+                                    {"bar": {"columns": ["A", "B", "C", ...], "data": [2501, 2489, 10, ...]}}
+                                    If the query requires creating a line chart, reply as follows:
+                                    {"line": {"columns": ["A", "B", "C", ...], "data": [25, 24, 10, ...]}}
+                                    If the query requires creating a map, reply as follows:
+                                    {"map": {"Lat": [ .......... ], "Long": [..........], "data": [.............],"kab":[.........]}}         
+                                    All strings in "columns" list and data list, should be in double quotes,
+                                    "Lat" and "Long" columns are latitude and longitude data should following the reference Table 21.1: Koordinat Kabupaten dan Kota,
+                                    "Lat" and "Long" list should be in float,
+                                    data list should be in integer or float,
+                                    underscore symbol must remove from data list,
+                                    Lets think step by step
+                                    Below is the query.
+                                    Query:
+                                    """
+                            + prompt
+                            ) 
+                            response_grafik = ask_gpt4(prompt_grafik, context, model="gpt-4o-mini")
+                            decoded_response = decode_response(response_grafik)
+                            write_response(decoded_response)
+                            response ="***{Visualisasi}***"
+                        except Exception as e:
+                            st.error(f"Gagal memuat visualisasi. Coba Lagi!")
+                else:
+                    response = ask_gpt4(prompt, context, model="gpt-4o-mini")
+                    def stream_data():
+                        for word in response.split(" "):
+                            yield word + " "
+                            time.sleep(0.06)
+                    st.write_stream(stream_data) 
         if response is not None:
             message = {"role": "assistant", "content": response}
             st.session_state.messages.append(message)

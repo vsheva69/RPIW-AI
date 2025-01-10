@@ -1075,3 +1075,6 @@ Traceback (most recent call last):
     raise self.handle_error_response(
 openai.error.InvalidRequestError: '$.input' is invalid. Please check the API reference: https://platform.openai.com/docs/api-reference.
 2025-01-10 12:21:28.483 Session with id 65278580-ce49-4921-97de-55555a0f549d is already connected! Connecting to a new session.
+2025-01-10 15:51:43.432 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2025-01-10 15:52:11.946 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2025-01-10 15:54:36.564 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
