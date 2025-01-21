@@ -264,19 +264,71 @@ def main():
         st.session_state.user = None
 
     if st.session_state.user is None:
-        st.subheader("Login dengan Akun Kepegawaian")
-        username = st.text_input("Username")
-        password = st.text_input("Password", type="password")
-        if st.button("Login"):
+        plh = st.container()
+        script = """<div id = 'chat_outer'></div>"""
+        st.markdown(script, unsafe_allow_html=True)
+
+        with plh:
+            script = """<div id = 'chat_inner'></div>"""
+            st.markdown(script, unsafe_allow_html=True)
+            st.title("Masuk menggunakan Akun Kepegawaian")
+            left,right = st.columns([0.5,0.5],gap="large")
+            left.image('proses/logo-bpiw.png',width=200)
+            username = right.text_input("Username")
+            password = right.text_input("Password",type="password")
+        ## applying style
+        chat_plh_style = """<style>
+        @media (min-width: 992px) {
+        div[data-testid='stVerticalBlock']:has(div#chat_inner):not(:has(div#chat_outer)) {
+        align=center;
+        padding: 50px;
+        box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+        border-radius:20px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width:960px;
+        background-color: #FFFFFF;};
+        }
+
+        @media screen and (max-width: 850px) {
+        div[data-testid='stVerticalBlock']:has(div#chat_inner):not(:has(div#chat_outer)) {
+        align=center;
+        padding: 50px;
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width:350px;
+        background-color: #FFFFFF;};
+        }
+        </style>
+        """
+        def berhasil_toast():
+           msg = st.toast('Mengecek Kredensial..')
+           time.sleep(1.0)
+           msg.toast('Masih Mengecek..')
+           time.sleep(1.0)
+           msg.toast(f":green[Selamat datang, {user['username']}!]", icon = "🥞")
+
+        def gagal_toast():
+           msg = st.toast('Mengecek Kredensial..')
+           time.sleep(1.0)
+           msg.toast('Masih Mengecek..')
+           time.sleep(1.0)
+           msg.toast(f":red[Gagal Login]")
+
+        st.markdown(chat_plh_style, unsafe_allow_html=True)
+        if right.button("Login"):
             user = authenticate_user(username, password)
             if user:
                 st.session_state.user = user
                 add_user_to_db(user["user_id"], user["username"])
-                st.success(f"Selamat datang, {user['username']}!")
-                time.sleep(2.00)
+                berhasil_toast()
+                time.sleep(3.00)
                 st.rerun(scope="app")
             else:
-                st.error("Login gagal! Periksa username atau password.")
+                gagal_toast()
         return
 
     # Sidebar untuk manajemen sesi
@@ -294,7 +346,7 @@ def main():
         time.sleep(2.00)
         st.rerun(scope="app")
     profil = two.popover(" ", icon=":material/face:", use_container_width=True)
-    profil.write("ini profil")
+    profil.write(f"{st.session_state.user['username']}")
     if three.button(" ", icon=":material/refresh:", use_container_width=True):
         st.rerun(scope="app")
    # session_name = st.sidebar.text_input("Nama Sesi", value=f"Sesi-{len(session_names) + 1}")
