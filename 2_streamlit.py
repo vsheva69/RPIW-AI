@@ -271,8 +271,10 @@ def main():
         with plh:
             script = """<div id = 'chat_inner'></div>"""
             st.markdown(script, unsafe_allow_html=True)
-            st.title("Masuk menggunakan Akun Kepegawaian")
-            left,right = st.columns([0.5,0.5],gap="large")
+            __,col,__ = st.columns(3)
+            col.title("ChatBot RPIW")
+            st.write(" ")
+            left,right = st.columns([0.5,0.5],gap="small")
             left.image('proses/logo-bpiw.png',width=200)
             username = right.text_input("Username")
             password = right.text_input("Password",type="password")
