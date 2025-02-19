@@ -4,8 +4,8 @@ load_dotenv()
 import os 
 
 # Konfigurasi API Login Eksternal
-API_LOGIN_URL = "https://api-splp.layanan.go.id/t/pu.go.id/ehrm/login/1.0.0"
-API_KEY =  os.getenv("API_EHRM_KEY")  # Tambahkan API key Anda
+#API_LOGIN_URL = "https://api-splp.layanan.go.id/t/pu.go.id/ehrm/login/1.0.0"
+#API_KEY =  os.getenv("API_EHRM_KEY")  # Tambahkan API key Anda
 
 def authenticate_user(username, password):
     """
