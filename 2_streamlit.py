@@ -14,7 +14,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Masukkan API key OpenAI Anda
-openai.api_key = os.getenv("OPENAI_API_KEY")
+#openai.api_key = os.getenv("OPENAI_API_KEY")
 
 # === Database Setup ===
 DB_FILE = "DB/chat_sessions.db"
