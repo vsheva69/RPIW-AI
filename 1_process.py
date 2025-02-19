@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Masukkan API key OpenAI Anda
-openai.api_key = os.getenv("OPENAI_API_KEY")
+#openai.api_key = os.getenv("OPENAI_API_KEY")
 
 def extract_text_from_pdf(pdf_path):
     """Ekstrak teks dari file PDF."""
